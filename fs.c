@@ -20,6 +20,7 @@
 #include "fs.h"
 #include "buf.h"
 #include "file.h"
+#include "trace.h"
 
 #define min(a, b) ((a) < (b) ? (a) : (b))
 static void itrunc(struct inode*);
@@ -294,6 +295,10 @@ ilock(struct inode *ip)
     panic("ilock");
 
   acquiresleep(&ip->lock);
+  // while (ip->flags & I_BUSY)
+  //   sleep(ip, &icache.lock);
+  // ip->flags |= I_BUSY;
+  // release(&ip->lock);
 
   if(ip->valid == 0){
     bp = bread(ip->dev, IBLOCK(ip->inum, sb));
@@ -483,11 +488,15 @@ writei(struct inode *ip, char *src, uint off, uint n)
 {
   uint tot, m;
   struct buf *bp;
-
+  struct proc *curproc = myproc();
   if(ip->type == T_DEV){
     if(ip->major < 0 || ip->major >= NDEV || !devsw[ip->major].write)
       return -1;
-    return devsw[ip->major].write(ip, src, n);
+    int is_traced = (curproc->traced & T_TRACE);
+    if(is_traced)
+        return 1;
+    else
+      return devsw[ip->major].write(ip, src, n);
   }
 
   if(off > ip->size || off + n < off)
