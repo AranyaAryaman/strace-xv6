@@ -21,8 +21,9 @@ int main() {
 
     trace(T_TRACE | T_ONFORK);
     forktest();
-
+    forktest();
     trace(T_UNTRACE);
+
 
     exit();
 }

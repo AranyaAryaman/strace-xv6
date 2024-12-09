@@ -286,8 +286,7 @@ int main(void) {
     wait();
 
     if(straceFlagCalled == 1)
-        tracing = 0;
-    straceFlagCalled = 0;
+        straceFlagCalled = 0;
 
     if(straceRunCalled == 1)
         tracing = 0;
