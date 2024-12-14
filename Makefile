@@ -188,9 +188,16 @@ QEMUOPTS = \
 qemu: $K/kernel fs.img xv6.img
 	$(QEMU) $(QEMUOPTS)
 
+qemu-nox: $K/kernel fs.img xv6.img
+	$(QEMU) -nographic $(QEMUOPTS)
+
 qemu-gdb: $K/kernel fs.img xv6.img .gdbinit
 	@echo "*** Now run 'gdb'." 1>&2
 	$(QEMU) -serial mon:stdio $(QEMUOPTS) -S $(QEMUGDB)
+
+qemu-nox-gdb: $K/kernel fs.img xv6.img .gdbinit
+	@echo "*** Now run 'gdb'." 1>&2
+	$(QEMU) -nographic $(QEMUOPTS) -S $(QEMUGDB)
 
 qemu-vscode: $K/kernel fs.img xv6.img launch.json
 	@echo "*** Now attach to qemu in the debug console ofb vscode." 1>&2
