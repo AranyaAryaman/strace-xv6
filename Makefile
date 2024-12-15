@@ -154,8 +154,8 @@ UPROGS=\
 	$U/_leak\
 	$U/_dump\
 
-fs.img: mkfs/mkfs README.md $(UPROGS)
-	./mkfs/mkfs fs.img README.md $(UPROGS)
+fs.img: mkfs/mkfs $(UPROGS)
+	./mkfs/mkfs fs.img $(UPROGS)
 
 xv6.img: $K/bootblock $K/kernel fs.img
 	dd if=$K/bootblock of=xv6.img
